@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: rrshare
+Version: 3.5.30
+Summary: stock data(from tusharepro) & analysis
+License: MIT
+Author: rome
+Requires-Python: >=3.8,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: click (>=7.1.2,<8.0.0)
+Requires-Dist: easyquotation (>=0.7.4,<0.8.0)
+Requires-Dist: streamlit (>=0.80.0,<0.81.0)
+Requires-Dist: tushare (>=1.2.62,<2.0.0)
+Requires-Dist: zenlog (>=1.1,<2.0)

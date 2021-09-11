@@ -1,0 +1,30 @@
+#!/opt/conda/bin/python
+
+# update stock_day swl_dayi
+30 17-18 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_day.py > /tmp/update_stock_day.log >&1
+30 20-21 * * 1-5  python /home/rome/rrshare/rrshare/rqUpdate/update_swl_day.py > /tmp/update_swl_day.log >&1
+
+# update PRS_pre and last
+40 17,21 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_RS_OH_MA_pre.py > /tmp/update_stock_PRS_pre.log >&1
+
+# realtime price to PRS
+26 9 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_realtime_PRS.py > /tmp/update_stock_realtime_PRS.log >&1
+0 13 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_realtime_PRS.py > /tmp/update_stock_realtime_PRS.log >&1
+
+# cacaulate swl rs
+55 21 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_swl_rs_valuation.py > /tmp/update_swl_rs_valuation.log >&1
+#!/opt/conda/bin/python
+
+# update stock_day swl_day
+30 17-18 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_day.py > /tmp/update_stock_day.log >&1
+30 20-21 * * 1-5  python /home/rome/rrshare/rrshare/rqUpdate/update_swl_day.py > /tmp/update_swl_day.log >&1
+
+# update PRS_pre and last
+40 17,21 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_RS_OH_MA_pre.py > /tmp/update_stock_PRS_pre.log >&1
+
+# realtime price to PRS
+26 9 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_realtime_PRS.py > /tmp/update_stock_realtime_PRS.log >&1
+0 13 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_stock_realtime_PRS.py > /tmp/update_stock_realtime_PRS.log >&1
+
+# cacaulate swl rs
+55 21 * * 1-5 python /home/rome/rrshare/rrshare/rqUpdate/update_swl_rs_valuation.py > /tmp/update_swl_rs_valuation.log >&1
