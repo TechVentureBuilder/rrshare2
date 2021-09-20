@@ -250,7 +250,8 @@ def rq_save_stock_day_adj_fillna_pg(start_date='20190101'): #20050101
             print(e)
 
 
-def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04   
+def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04
+    table_name='swl_day'
     t = time.localtime(time.time())
     if int(time.strftime('%H%M%S',t))<210000:   #晚上9点之后在更新当天数据，以免不及时
         t = time.localtime(time.time()-3600*24)
@@ -260,19 +261,17 @@ def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04
     end_date=tS
     print(end_date)
     try: 
-        mes='SELECT DISTINCT trade_date FROM swl_day;'
+        mes=f'SELECT DISTINCT trade_date FROM {table_name};'
         trade_data_pg = load_data_from_postgresql(mes).trade_date.tolist()
-        #print(trade_data_pg[-3:])
-        #print(len(trade_data_pg))
-        #time.sleep(3)
-        #for i in range(len(trade_data_pg)):
-        #    print(i)
-        #    trade_data_pg[i]=trade_data_pg[i].strftime("%Y-%m-%d")
-        #    print(trade_data_pg[i])
-        trade_data_pg = list(map(lambda x: x.strftime('%Y-%m-%d'), trade_data_pg))
-        #print(len(trade_data_pg))
-        print(trade_data_pg[-1:])
-        #time.sleep(2)
+        print(trade_data_pg[-3:])
+        print(len(trade_data_pg))
+        for i in range(len(trade_data_pg)):
+            print(i)
+            trade_data_pg[i]=trade_data_pg[i].strftime("%Y-%m-%d")
+            #print(trade_data_pg[i])
+            #trade_data_pg = list(map(lambda x: x.strftime('%Y-%m-%d'), trade_data_pg))
+            #print(len(trade_data_pg))
+            #print(trade_data_pg[-1:])
     except: #第一次运行
         trade_data_pg=list()
     if isinstance(start_date,int):
@@ -284,18 +283,20 @@ def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04
     trade_date2.sort()
     print('^^^',trade_date2)
     #time.sleep(5)
+    
     if len(trade_date2)==0:
-        rq_util_log_info('SWL day is up to date and does not need to be updated')
+        rq_util_log_info('swl day is up to date and does not need to be updated')
     for i in trade_date2:
         print(i)
         try:
             t=time.time()        
             df=fetch_swl_daily_tspro_adv(trade_date=i)   
             #i=i[7:10].lower()+i[0:6]
-            save_data_to_postgresql('swl_day',df,'append')
-            time.sleep(1)
-            t1=time.time()   
-            rq_util_log_info('save '+i+'swl day success,take '+str(round(t1-t,2))+' S')        
+            save_data_to_postgresql(table_name, df, 'append')
+            t1=time.time()
+            tt = round((t1-t),4)
+            time.sleep(2)
+            rq_util_log_info(f'save {i} {table_name} success,take {tt}S')        
         except Exception as e:
             print(e)
    
