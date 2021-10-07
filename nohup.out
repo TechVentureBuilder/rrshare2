@@ -1,0 +1,30 @@
+RRSHARE>> 
+  [33m[1mWarning:[0m to view this Streamlit app on a browser, run it with the following
+  command:
+
+    streamlit run /home/rome/.local/bin/rrshare [ARGUMENTS]
+2021-10-01 08:30:53.866 
+  [33m[1mWarning:[0m to view this Streamlit app on a browser, run it with the following
+  command:
+
+    streamlit run /home/rome/.local/bin/rrshare [ARGUMENTS]
+/home/rome/.rrshare/setting/config.json
+2021-09-30
+2021-10-01 08:30:53.721199
+False
+False
+3.9.30
+Usage: rrshare [OPTIONS] COMMAND [ARGS]...
+
+  输入 rrshare [COMMAND] --help 查看命令详情 例如：rrshare update --help
+
+Options:
+  -h, --help  Show this message and exit.
+
+Commands:
+  ipython           打开 ipython
+  make-config-path  make dir setting config path .rrsdk /setting/--> add...
+  realtime-prs      run Timer.py --> start realtime PRS
+  record-data       update all stock and swl data and save to pgsql
+  start-streamlit   start streamlit run PRS.py
+  version           获取版本信息

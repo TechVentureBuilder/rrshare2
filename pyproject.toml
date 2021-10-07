@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rrshare"
-version = "21.9.7"
+version = "3.9.30"
 description = "stock data(from tusharepro) & analysis"
 authors = ["rome"]
 license = "MIT"

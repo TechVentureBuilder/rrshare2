@@ -54,6 +54,13 @@ end = datetime.datetime(year, month, day, 15, 2, 5)
 
 st.write('last reload',current, 'last tradedate:',lastTD)
 
+L = ['L1','L2','L3']
+
+#print(current)
+#print(current > start)
+#print(current > noon_start)
+
+
 
 def out_df_items(df):
     df = df.round(2)
@@ -63,59 +70,122 @@ def out_df_items(df):
     return df, date, time
 
 
+def swl_rs_valuation_all(level):
+    table_name = f'swl_rs_valuation_{level}'
+    data = pd.read_sql_table(table_name, conn)
+    st.text(f'申万行业相对强度和估值_{level}')
+    st.dataframe(data,width=1400, height=900)
+    pass
+
+
 def swl_rs_valuation():
-    data = pd.read_sql_table('swl1_rs_L1',conn)
+    data = pd.read_sql_table('swl1_rs_L1',conn) # swl1_rs_reaktime_L1
     df = data.copy()
     df.rename(columns={'pct_change':'pct_chg'}, inplace=True)
     df = df.round(2)
     #swl
-    st.text(f'申万行业相对强度和估值')#: {df.trade_date.unique()}')
+    st.text(f'申万行业相对强度和估值-L1实时')#: {df.trade_date.unique()}')
     #df.drop(columns=['trade_date'], inplace=True)
     st.dataframe(df, width=1400, height=900)
 
+    for level in L:
+        swl_rs_valuation_all(level)
+    pass
 
-def write_stock_RS_OH_MA():
+
+def write_stock_RS_OH_MA_bak():
     st.text('相对强度 ')
-    table_name='stock_RS_OH_MA' if  current < start else 'stock_RS_OH_MA_new'
-    
-    cols = ['cn_name','code', 'close','pct_chg','OH',"OL","swl_L3", 'rs_10','rs_250']
-    cols2= ['cn_name','code', 'close','pct_chg','ma20','ma250','rs_10','rs_250','OH',"OL","swl_L3"]
+    #table_name='stock_RS_OH_MA' if  current < start else 'stock_RS_OH_MA_new'
+    table_name = 'stock_RS_OH_MA_new' 
+    #st.write(table_name)
+    cols = ['name','code', 'close','pct_chg','OH',"OL","swl_L3", 'rs_10','rs_250']
+    cols2= ['name','code', 'close','pct_chg','ma20','ma250','rs_10','rs_250','OH',"OL","swl_L3"]
     try:
         #table_name='stock_RS_OH_MA_new'
         st.write(table_name)
         df = pd.read_sql_table(table_name,conn)
-        df.rename(columns={'name':'cn_name'},inplace=True)
-        if table_name == 'stock_RS_OH_MA_new':
-            data = out_df_items(df)
-            df2 = data[0][cols]
-            df2 = df2.dropna(axis=0,how='any')
-            df2 = df2.sort_values(by='swl_L3')
-            code = st.text_input('Input stock code:','300146')
-            df1 = data[0][cols2]
-            st.dataframe(df1[df1.code == code].T)
-            st.write(data[1], data[2])
-            #st.text('相对强度 all')
-            st.write('涨停', str(len(data[0][data[0].pct_chg > 9.90])),'只' , ',   ',\
+        #df.rename(columns={'name':'cn_name'},inplace=True)
+        #if table_name == 'stock_RS_OH_MA_new':
+        data = out_df_items(df)
+        df2 = data[0][cols]
+        df2 = df2.dropna(axis=0,how='any')
+        df2 = df2.sort_values(by='swl_L3')
+        code = st.text_input('Input stock code:','600519')
+        df1 = data[0][cols2]
+        st.dataframe(df1[df1.code == code].T)
+        st.write(data[1], data[2])
+        #st.text('相对强度 all')
+        st.write('涨停', str(len(data[0][data[0].pct_chg > 9.90])),'只' , ',   ',\
                     '跌停', str(len(data[0][data[0].pct_chg < -9.90])),'只' )
-            st.write(data[0], width=1200, height=600)
+        st.write(data[0], width=1200, height=600)
+        
+        """
         if table_name == 'stock_RS_OH_MA':
             data = df
             df2 = df[cols]
             df2 = df2.dropna(axis=0,how='any')
             df2 = df2.sort_values(by='swl_L3')
-            code = st.text_input('Input stock code:','300146')
+            code = st.text_input('Input stock code:','600519')
             df1 = data[cols2]
             st.dataframe(df1[df1.code == code].T)
             #st.text('相对强度 all')
             st.write('涨停', str(len(df[df.pct_chg > 9.90])),'只', ',', \
                      '跌停', str(len(df[df.pct_chg < -9.90])),'只')
             st.write(df, width=1200, height=600)
-        
+         """
+                 
         st.write('一年新高', str(len(df[df.OH >98])),'只' )
         st.write(df2[(df2.OH > 98) ], width=1200, height=600) 
         st.write('一年新低', str(len(df[df.OL <2])),'只' )
         st.write(df2[df2.OL < 2], width=1200, height=600) 
    
+    except Exception as e:
+        print(e)    
+
+
+def write_stock_RS_OH_MA_new():
+    st.text('相对强度 ')
+    #table_name='stock_RS_OH_MA' if  current < start else 'stock_RS_OH_MA_new'
+    table_name = 'stock_RS_OH_MA_new' 
+    #st.write(table_name)
+    cols = ['name','code', 'close','pct_chg','OH',"OL","swl_L3", 'rs_10','rs_250']
+    cols2= ['name','code', 'close','pct_chg','ma20','ma250','rs_10','rs_250','OH',"OL","swl_L3"]
+    try:
+        #table_name='stock_RS_OH_MA_new'
+        #st.write(table_name)
+        st.text('相对强度 all')
+        df = pd.read_sql_table(table_name,conn)
+        st.write(df)
+        
+        data = out_df_items(df)
+        df2 = data[0][cols]
+        df2 = df2.dropna(axis=0,how='any')
+        df2 = df2.sort_values(by='rs_10')
+        st.write(df2)
+       
+        
+        st.text('相对强度 all')
+        st.write('涨停', str(len(data[0][data[0].pct_chg > 9.90])),'只' , ',   ',\
+                    '跌停', str(len(data[0][data[0].pct_chg < -9.90])),'只' )
+        st.write(data[0], width=1200, height=600)
+        st.write('一年新高', str(len(df[df.OH >98])),'只' )
+        st.write(df2[(df2.OH > 98) ], width=1200, height=600) 
+        st.write('一年新低', str(len(df[df.OL <2])),'只' )
+        st.write(df2[df2.OL < 2], width=1200, height=600) 
+  
+        
+        data = out_df_items(df)
+        df2 = data[0][cols]
+        df2 = df2.dropna(axis=0,how='any')
+        df2 = df2.sort_values(by='rs_10')
+        st.write(df2)
+        
+        code = st.text_input('Input stock code:','600519')
+        df1 = data[0][cols2]
+        st.write(df1)
+        st.dataframe(df1[df1.code == code].T)
+        st.write(data[1], data[2])
+
     except Exception as e:
         print(e)    
 
@@ -126,7 +196,7 @@ def stock_select_PRS(table_name='stock_select_PRS'):
         df.rename(columns={'name':'display_name'},inplace=True)
         #print(df)
         data = out_df_items(df)
-        st.text('相对强度 top')
+        st.write('相对强度 top', str(len(df)), '只')
         st.write(data[1], data[2])
         st.dataframe(data[0], width=1200, height=600)
     except Exception as e:
@@ -138,13 +208,37 @@ def stock_fundmentals(): #TODO
     code = st.text_input('Input stock code:','300146')
     #code =st.multiselect('selects:',[1,2,3])
     #st.write([code])
-    st.text('股票基本面指标')
+    #st.text('股票基本面指标')
+    #st.write(df[df.code  == code].T)
+
+
+def stock_select_PRS(table_name='stock_select_PRS'):
+    try:
+        df = pd.read_sql_table(table_name,conn)
+        df.rename(columns={'name':'display_name'},inplace=True)
+        #print(df)
+        data = out_df_items(df)
+        st.write('相对强度 top', str(len(df)), '只')
+        st.write(data[1], data[2])
+        st.dataframe(data[0], width=1200, height=600)
+    except Exception as e:
+        print(e)
+   
+
+def stock_fundmentals(): #TODO
+    #df = pd.read_sql_table('ROE_CF_SR_INC', conn)
+    code = st.text_input('Input stock code:','300146')
+    #code =st.multiselect('selects:',[1,2,3])
+    #st.write([code])
+    #st.text('股票基本面指标')
     #st.write(df[df.code  == code].T)
     #st.dataframe(df.T, width=1400, height=500)
+    st.write("wencai","http://www.iwencai.com/unifiedwap/home/index?qs=pc_~soniu~info~all~homepage~enter")
     pass
 
 
 def stock_infomation():
+    st.write("wencai","http://www.iwencai.com/unifiedwap/home/index?qs=pc_~soniu~info~all~homepage~enter")
     st.write('concept','http://q.10jqka.com.cn/gn/')
     #x = st.slider('x')
     st.text('业绩预告')
@@ -165,6 +259,8 @@ def stock_infomation():
     url_hsgt="https://emrnweb.eastmoney.com/hsgt/search?"
     st.write(f'hsgt {url_hsgt}')
 
+    st.write('cfi','http://quote.cfi.cn/cfi_industrydetails.aspx?ctype=5day&dtype=zws')
+
 
 def other_info():
     st.write('HK','http://q.10jqka.com.cn/hk/indexYs/')
@@ -175,21 +271,25 @@ def other_info():
     st.write('bond','https://cn.investing.com/rates-bonds/u.s.-10-year-bond-yield')
     st.write('myselect','http://quote.eastmoney.com/zixuan/?from=home')
     st.write("金十数据", "https://www.jin10.com/")
+    st.write("商品价格","http://top.100ppi.com/zdb/detail-day---1.html")
+        
 
-         
 def main():
     selects = st.sidebar.selectbox(
     "Menu:",
-    ( "stock_PRS", "stock_PRS_top",'swl','stock_fundamental','stock_infomation','other_info'))
-
+    ("swl", 
+        "stock_PRS",
+        "stock_PRS_top",
+    #    'stock_fundamental',
+        'stock_infomation',
+        'other_info'))
+    
     if selects == 'swl':
         swl_rs_valuation()
     if selects == "stock_PRS_top":
         stock_select_PRS()
-    if selects == 'stock_fundamental':
-        stock_fundmentals()
     if selects == 'stock_PRS':
-        write_stock_RS_OH_MA()
+        write_stock_RS_OH_MA_new()
     if selects == 'stock_infomation':
         stock_infomation()
     if selects == 'other_info':
@@ -197,4 +297,6 @@ def main():
 
 
 if __name__ == "__main__":
+    
     main()
+

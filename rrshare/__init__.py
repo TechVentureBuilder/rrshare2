@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__version__ = '3.5.17'
+#__version__ = '3.5.17'
 
 #init setting
 from rrshare.RQSetting.rqLocalize import (cache_path, log_path, rq_path, setting_path, make_dir_path)
@@ -31,6 +31,26 @@ from rrshare.record_all_data import main_record
 
 #cli
 from rrshare.cmds import cli
+
+def _get_version(default='0.1.0'):
+    try:
+        from pkg_resources import DistributionNotFound, get_distribution
+    except ImportError:
+        return default
+    else:
+        try:
+            return get_distribution(__package__).version
+        except DistributionNotFound:  # Run without install
+            return default
+        except ValueError:  # Python 3 setup
+            return default
+        except TypeError:  # Python 2 setup
+            return default
+
+
+__version__ = _get_version()
+
+print(__version__)
 
 def entry_point():
     cli()
