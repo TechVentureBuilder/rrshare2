@@ -18,12 +18,11 @@ data source from tusharepro and eastmoney.
 9. rrshare start-streamlit  
 10. set start rrshare streamlit at setup  
       create a start-streamlit.service use systemctl unit.  
-      ```
+      
 	sudo cp rrshare_streamlit.service /etc/systemd/system/rrshare-streamlit.service  
 	sudo systemctl start rrshare_streamlit  
 	sudo systemctl enable rrshare_streamlit  
 
-      ```	  
 11. use crontab create timer:  
 	day(stock & swl) data timing update ;  
 	realtime-snapt data update every 1min at market open;  
