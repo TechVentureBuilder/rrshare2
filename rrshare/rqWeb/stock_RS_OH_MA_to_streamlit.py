@@ -60,33 +60,36 @@ L = ['L1','L2','L3']
 #print(current > start)
 #print(current > noon_start)
 
-
-
 def out_df_items(df):
-    df = df.round(2)
+    #df = df.round(2)
     date, time = df['trade_date'].values[0], df['time'].values[0]
     #date = df['trade_date'].values[0]
     df.drop(columns=['trade_date', 'time'], inplace=True)
     return df, date, time
 
 
+def out_swl_item(df):
+    date_time = df['trade_date'].values[0]
+    df.drop(columns=['trade_date'], inplace=True)
+    return df, date_time
+
+
 def swl_rs_valuation_all(level):
     table_name = f'swl_rs_valuation_{level}'
-    data = pd.read_sql_table(table_name, conn)
-    st.text(f'申万行业相对强度和估值_{level}')
-    st.dataframe(data,width=1400, height=900)
-    pass
-
+    df = pd.read_sql_table(table_name, conn)
+    data = out_swl_item(df)
+    st.write('申万行业相对强度和估值_{level} 更新时间：',data[1])
+    st.dataframe(data[0],width=1400, height=900)
+    
 
 def swl_rs_valuation():
-    data = pd.read_sql_table('swl1_rs_L1',conn) # swl1_rs_reaktime_L1
-    df = data.copy()
+    df = pd.read_sql_table('swl1_rs_L1',conn) # swl1_rs_reaktime_L1
     df.rename(columns={'pct_change':'pct_chg'}, inplace=True)
     df = df.round(2)
-    #swl
-    st.text(f'申万行业相对强度和估值-L1实时')#: {df.trade_date.unique()}')
-    #df.drop(columns=['trade_date'], inplace=True)
-    st.dataframe(df, width=1400, height=900)
+    data = out_swl_item(df)
+    
+    st.write('申万行业相对强度和估值-L1实时: ',data[1])#: {df.trade_date.unique()}')
+    st.dataframe(data[0], width=1400, height=900)
 
     for level in L:
         swl_rs_valuation_all(level)
@@ -107,7 +110,8 @@ def write_stock_RS_OH_MA_new():
         df.rename(columns={'name':'cn_name'},inplace=True)
         
         data = out_df_items(df)
-        st.write(data[1],data[2])
+        data_by_pctchg = data[0].sort_values(by='pct_chg', ascending=False)
+        st.write("更新时间: ",data[1],data[2])
         #st.write(data[0])
         df2 = data[0][cols]
         df2 = df2.dropna(axis=0,how='any')
@@ -116,7 +120,7 @@ def write_stock_RS_OH_MA_new():
        
         st.write('涨停', str(len(data[0][data[0].pct_chg > 9.90])),'只' , ',   ',\
                     '跌停', str(len(data[0][data[0].pct_chg < -9.90])),'只' )
-        st.write(data[0], width=1200, height=600)
+        st.write(data_by_pctchg, width=1200, height=600)
         
         st.write('一年新高', str(len(df[df.OH >98])),'只' )
         st.write(df2[(df2.OH > 98)], width=1200, height=600)
@@ -130,9 +134,6 @@ def write_stock_RS_OH_MA_new():
         st.write(data[1], data[2])
         df_code = df1[df1.code == code]
         st.write(df_code)
-
-
-
     except Exception as e:
         print(e)    
 
@@ -182,7 +183,8 @@ def stock_infomation():
     st.write(f'hsgt {url_hsgt}')
 
     st.write('cfi','http://quote.cfi.cn/cfi_industrydetails.aspx?ctype=5day&dtype=zws')
-
+    st.write('财联社', 'https://cls.cn')
+    st.write('雪球','https://xueqiu.com')
 
 def other_info():
     st.write('HK','http://q.10jqka.com.cn/hk/indexYs/')
@@ -194,7 +196,7 @@ def other_info():
     st.write('myselect','http://quote.eastmoney.com/zixuan/?from=home')
     st.write("金十数据", "https://www.jin10.com/")
     st.write("商品价格","http://top.100ppi.com/zdb/detail-day---1.html")
-        
+    st.write('investing','https://hk.investing.com')    
 
 def main():
     selects = st.sidebar.selectbox(
