@@ -283,16 +283,12 @@ def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04
     trade_date2=list(set(trade_date).difference(set(trade_data_pg))) #差集 在trade_date 中 不在trade_data_pg
     trade_date2.sort()
     print(trade_date2)
-<<<<<<< HEAD
 
-=======
->>>>>>> a06bfa9df060ed9bb9bc3c39891170b917bfa576
     if len(trade_date2)==0:
         rq_util_log_info('swl day is up to date and does not need to be updated')
     for i in trade_date2:
         print(i)
         try:
-<<<<<<< HEAD
             t=time.time()
             df=fetch_swl_daily_tspro_adv(trade_date=i)
             save_data_to_postgresql(table_name, df, 'append')
@@ -303,18 +299,6 @@ def rq_save_swl_day_pg(start_date='2020-01-01'): #from 2015-01-04
         except Exception as e:
             print(e)
 
-=======
-          t=time.time()
-          df=fetch_swl_daily_tspro_adv(trade_date=i)
-          #i=i[7:10].lower()+i[0:6]
-          save_data_to_postgresql(table_name, df, 'append')
-          t1=time.time()
-          tt = round((t1-t),4)
-          time.sleep(3)
-          rq_util_log_info(f'save {i} {table_name} success,take {tt}S')      
-        except Exception as e:
-              print(e)
->>>>>>> a06bfa9df060ed9bb9bc3c39891170b917bfa576
 
 if __name__ == '__main__':          
     
