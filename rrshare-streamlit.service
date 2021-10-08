@@ -1,0 +1,15 @@
+[Unit]
+Description=rrshare service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bash /home/rome/rrshare/rrshare/start_streamlit.sh 
+User=rome
+ReStart=always
+RestartSec=20
+ReStartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
+

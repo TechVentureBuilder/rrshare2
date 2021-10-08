@@ -1,0 +1,10 @@
+{
+
+    "PGSQL_PASSWORD": "postgres pwd",
+
+    "SQLITE_PATH": "/mnt/disk1/sqlite_data/",
+
+    "POSTGRESQL_RRSHARE_ORM": "postgresql://postgres:passwd@localhost:5432/rrshare",
+
+    "TSPRO_TOKEN": "tusharepro_token"
+}
