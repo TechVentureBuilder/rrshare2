@@ -108,7 +108,7 @@ def write_stock_RS_OH_MA_new():
         st.text('申万行业相对强度')
         df = pd.read_sql_table(table_name,conn)
         df.rename(columns={'name':'cn_name'},inplace=True)
-        
+        df.drop_duplicates(subset=None,keep='first',inplace=True)
         data = out_df_items(df)
         data_by_pctchg = data[0].sort_values(by='pct_chg', ascending=False)
         st.write("更新时间: ",data[1],data[2])
